@@ -83,3 +83,39 @@ RewardObject
 | npm run db:check | Counts the rows in every table |
 | npm run db:reset | Empties the database, rebuilds every table and reloads the seed data |
 | npm run check | Runs the same automatic check that GitHub runs after every push |
+
+## Question Sets API (Module 1)
+
+Base URL: `http://localhost:3001/api/v1`
+
+Every request needs the `X-Demo-User` header with the `school_id` of the caller. This is a Week 11 stand-in for login. Only accounts with the role `host` may use these endpoints.
+
+| Method | Path | Body | Success | Errors |
+|---|---|---|---|---|
+| POST | `/question-sets` | `{ "title": "...", "subject": "..." }` | 201 and the new set | 400, 401, 403 |
+| GET | `/question-sets` | none | 200 and an array of the caller's sets | 401, 403 |
+| GET | `/question-sets/:id` | none | 200 and one set | 400, 401, 403, 404 |
+| PATCH | `/question-sets/:id` | `{ "title": "..." }` and/or `{ "subject": "..." }` | 200 and the changed set | 400, 401, 403, 404 |
+| DELETE | `/question-sets/:id` | none | 204 and an empty body | 400, 401, 403, 404 |
+
+A question set looks like this:
+
+```json
+{ "id": 1, "title": "Shinobi Basics", "subject": "General Knowledge", "hostId": 1 }
+```
+
+Rules:
+- `title` is required, 3 to 100 characters.
+- `subject` is required, 1 to 100 characters.
+- The owner (`hostId`) is always the caller. A client cannot choose it.
+- Only the owner can read, change or delete a set.
+
+ 
+### Test accounts
+
+| Name | `X-Demo-User` | Role |
+|---|---|---|
+| Kakashi Hatake | `24179712` | host (owns the seeded set "Shinobi Basics") |
+| Tsunade Senju | `24179333` | host |
+| Hinata Hyuga | `24179723` | player |
+| Naruto Uzumaki | `24179795` | player |
