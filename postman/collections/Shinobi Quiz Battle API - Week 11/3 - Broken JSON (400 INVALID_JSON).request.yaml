@@ -1,0 +1,27 @@
+$kind: http-request
+url: "{{baseUrl}}/question-sets"
+method: POST
+headers:
+  X-Demo-User: "{{host}}"
+body:
+  type: json
+  content: " {\r
+
+    \  \"title\": \"Naruto Basics\",\r
+
+    \  \"subject\": \"Anime\""
+scripts:
+  - type: afterResponse
+    code: " pm.test(\"status is 400\", function () {\r
+
+      \  pm.response.to.have.status(400);\r
+
+      });\r
+
+      pm.test(\"code is INVALID_JSON\", function () {\r
+
+      \  pm.expect(pm.response.json().error.code).to.eql(\"INVALID_JSON\");\r
+
+      });"
+    language: text/javascript
+order: 3000

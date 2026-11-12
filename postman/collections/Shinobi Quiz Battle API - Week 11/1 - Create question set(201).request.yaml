@@ -1,0 +1,25 @@
+$kind: http-request
+url: "{{baseUrl}}/question-sets"
+method: POST
+headers:
+  X-Demo-User: "{{host}}"
+body:
+  type: json
+  content: "  {\r
+
+    \  \"title\": \"Naruto Basics\",\r
+
+    \  \"subject\": \"Anime\"\r
+
+    }"
+scripts:
+  - type: afterResponse
+    code: " pm.test(\"status is 201\", function () {\r
+
+      \  pm.response.to.have.status(201);\r
+
+      });\r
+
+      pm.collectionVariables.set(\"setId\", pm.response.json().id);"
+    language: text/javascript
+order: 1000
