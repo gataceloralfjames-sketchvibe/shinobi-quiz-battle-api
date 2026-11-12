@@ -1,0 +1,20 @@
+$kind: http-request
+url: " {{baseUrl}}/question-sets/999"
+method: GET
+headers:
+  X-Demo-User: "{{host}}"
+scripts:
+  - type: afterResponse
+    code: " pm.test(\"status is 404\", function () {\r
+
+      \  pm.response.to.have.status(404);\r
+
+      });\r
+
+      pm.test(\"code ends with _NOT_FOUND\", function () {\r
+
+      \  pm.expect(pm.response.json().error.code).to.match(/_NOT_FOUND$/);\r
+
+      });"
+    language: text/javascript
+order: 4981
