@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions"
+method: POST
+headers:
+  X-Demo-User: "{{player}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"questionSetId": {{setId}}}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("player is refused", function () {
+        pm.response.to.have.status(403);
+      });
+    language: text/javascript
+order: 10000

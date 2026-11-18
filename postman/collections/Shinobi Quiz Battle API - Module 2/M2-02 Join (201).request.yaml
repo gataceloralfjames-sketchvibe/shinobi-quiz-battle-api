@@ -1,0 +1,19 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/{{code}}/players"
+method: POST
+headers:
+  X-Demo-User: "{{player}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"nickname": "Hinata"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("join answers 201", function () {
+        pm.response.to.have.status(201);
+        pm.expect(pm.response.json().rejoined).to.eql(false);
+      });
+      pm.collectionVariables.set("playerId", pm.response.json().id);
+    language: text/javascript
+order: 3000

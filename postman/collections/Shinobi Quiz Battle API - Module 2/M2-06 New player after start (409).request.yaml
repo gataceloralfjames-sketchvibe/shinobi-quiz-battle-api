@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/{{code}}/players"
+method: POST
+headers:
+  X-Demo-User: "{{player2}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"nickname": "Naruto"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("new player is refused", function () {
+        pm.response.to.have.status(409);
+      });
+    language: text/javascript
+order: 7000

@@ -5,16 +5,10 @@ headers:
   X-Demo-User: "{{host}}"
 body:
   type: json
-  content: "  {\r
-
-    \  \"title\": \"Naruto Basics\",\r
-
-    \  \"subject\": \"Anime\"\r
-
-    }"
+  content: '{"title": "Naruto Basics {{$timestamp}}", "subject": "Anime"}'
 scripts:
   - type: afterResponse
-    code: " pm.test(\"status is 201\", function () {\r
+    code: "pm.test(\"status is 201\", function () {\r
 
       \  pm.response.to.have.status(201);\r
 

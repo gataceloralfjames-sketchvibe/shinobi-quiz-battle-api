@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/{{code}}"
+method: PATCH
+headers:
+  X-Demo-User: "{{host}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"status": "active"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("start answers 200", function () {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json().status).to.eql("active");
+      });
+    language: text/javascript
+order: 6000

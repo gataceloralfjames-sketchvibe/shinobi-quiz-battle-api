@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/{{code}}"
+method: PATCH
+headers:
+  X-Demo-User: "{{host}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"status": "finished"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("finish answers 200", function () {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json().status).to.eql("finished");
+      });
+    language: text/javascript
+order: 13000

@@ -1,0 +1,11 @@
+$kind: collection
+description: ""
+variables:
+  baseUrl: http://localhost:3001/api/v1
+  host: "24179712"
+  otherHost: "24179333"
+  player: "24179723"
+  player2: "24179795"
+  setId: ""
+  code: ""
+  playerId: ""
