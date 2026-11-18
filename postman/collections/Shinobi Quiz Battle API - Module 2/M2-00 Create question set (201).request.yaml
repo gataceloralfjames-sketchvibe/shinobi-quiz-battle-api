@@ -15,4 +15,4 @@ scripts:
       });
       pm.collectionVariables.set("setId", pm.response.json().id);
     language: text/javascript
-order: 1000
+order: 461
