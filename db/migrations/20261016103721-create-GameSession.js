@@ -8,6 +8,7 @@ module.exports = {
       sessionId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
+        autoIncrement: true,
         allowNull: false,
       },
       hostId: {
@@ -31,7 +32,7 @@ module.exports = {
         onUpdate: 'CASCADE',
       },
       joinCode: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.STRING(6),
         allowNull: false,
       },
       status: {
@@ -50,6 +51,11 @@ module.exports = {
         type: Sequelize.DATE,
         allowNull: true,
       },
+    });
+        await queryInterface.addConstraint('GameSession', {
+      fields: ['joinCode'],
+      type: 'unique',
+      name: 'uq_game_session_join_code',
     });
   },
 

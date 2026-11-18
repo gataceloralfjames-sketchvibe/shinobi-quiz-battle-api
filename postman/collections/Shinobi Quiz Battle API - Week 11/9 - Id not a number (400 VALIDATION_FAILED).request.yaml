@@ -13,8 +13,9 @@ scripts:
 
       pm.test(\"code is VALIDATION_FAILED\", function () {\r
 
-      \  pm.expect(pm.response.json().error.code).to.eql(\"VALIDATION_FAILED\");\r
+      \ 
+      pm.expect(pm.response.json().error.code).to.eql(\"VALIDATION_FAILED\");\r
 
       });"
     language: text/javascript
-order: 5000
+order: 9000

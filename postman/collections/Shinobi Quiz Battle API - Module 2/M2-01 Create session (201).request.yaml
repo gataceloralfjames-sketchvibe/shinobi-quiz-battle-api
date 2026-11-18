@@ -1,0 +1,20 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions"
+method: POST
+headers:
+  X-Demo-User: "{{host}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"questionSetId": {{setId}}}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("status is 201", function () {
+        pm.response.to.have.status(201);
+        pm.expect(pm.response.json().status).to.eql("waiting");
+        pm.expect(pm.response.json().joinCode).to.match(/^[A-Z0-9]{6}$/);
+      });
+      pm.collectionVariables.set("code", pm.response.json().joinCode);
+    language: text/javascript
+order: 2000

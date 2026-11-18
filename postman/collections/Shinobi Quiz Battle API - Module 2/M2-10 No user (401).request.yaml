@@ -1,0 +1,16 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"questionSetId": {{setId}}}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("no user is refused", function () {
+        pm.response.to.have.status(401);
+      });
+    language: text/javascript
+order: 11000

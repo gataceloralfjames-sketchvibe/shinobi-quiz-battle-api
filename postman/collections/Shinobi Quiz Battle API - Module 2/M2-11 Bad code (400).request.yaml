@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/12345"
+method: GET
+headers:
+  X-Demo-User: "{{host}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("bad code is refused", function () {
+        pm.response.to.have.status(400);
+        pm.expect(pm.response.json().error.code).to.eql("VALIDATION_FAILED");
+      });
+    language: text/javascript
+order: 12000

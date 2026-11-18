@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/{{code}}/players"
+method: POST
+headers:
+  X-Demo-User: "{{player}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"nickname": "Hinata"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("returning player is let back in", function () {
+        pm.response.to.have.status(200);
+        pm.expect(pm.response.json().rejoined).to.eql(true);
+      });
+    language: text/javascript
+order: 8000
