@@ -1,0 +1,18 @@
+$kind: http-request
+url: "{{baseUrl}}/sessions/{{code}}"
+method: PATCH
+headers:
+  X-Demo-User: "{{host}}"
+  Content-Type: application/json
+body:
+  type: json
+  content: '{"status": "active"}'
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("reopen is refused", function () {
+        pm.response.to.have.status(409);
+        pm.expect(pm.response.json().error.code).to.eql("INVALID_STATUS_CHANGE");
+      });
+    language: text/javascript
+order: 17000
