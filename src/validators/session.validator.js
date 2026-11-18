@@ -1,8 +1,10 @@
-const { body, param } = require('express-validator');
+ const { body, param } = require('express-validator');
 
-const idParam = param('id')
-  .isInt({ min: 1 }).withMessage('id must be a positive whole number')
-  .toInt();
+// The join code is in the URL, not the id: six letters or numbers, made uppercase.
+const codeParam = () => param('code')
+  .trim()
+  .toUpperCase()
+  .matches(/^[A-Z0-9]{6}$/).withMessage('the join code must be exactly 6 letters or numbers');
 
 const questionSetId = () => body('questionSetId')    // questionSetId INTEGER NOT NULL
   .exists().withMessage('questionSetId is required')
@@ -15,16 +17,11 @@ const timeLimit = () => body('timeLimit')            // timeLimit INTEGER, optio
   .isInt({ min: 1 }).withMessage('timeLimit must be a positive whole number')
   .toInt();
 
-const joinCode = () => body('joinCode')              // joinCode VARCHAR(6) NOT NULL
-  .exists().withMessage('joinCode is required')
+// A client may only ask for these two values. The service decides if the change is allowed.
+const status = () => body('status')
+  .exists().withMessage('status is required')
   .bail()
-  .isString().withMessage('joinCode must be text')
-  .bail()
-  .trim()
-  .toUpperCase()
-  .isLength({ min: 6, max: 6 }).withMessage('joinCode must be exactly 6 characters long')
-  .bail()
-  .matches(/^[A-Z0-9]+$/).withMessage('joinCode may only have letters and numbers');
+  .isIn(['active', 'finished']).withMessage('status must be active or finished');
 
 const nickname = () => body('nickname')              // nickname VARCHAR NOT NULL
   .exists().withMessage('nickname is required')
@@ -43,7 +40,13 @@ const avatar = () => body('avatar')                  // avatar VARCHAR, optional
 
 const createRules = [questionSetId(), timeLimit()];
 
-// Join uses the code in the body. The user comes from the X-Demo-User header, not the body.
-const joinRules = [joinCode(), nickname(), avatar()];
+// For routes that only need the code (GET /:code, GET /:code/players).
+const codeRules = [codeParam()];
 
-module.exports = { idParam, createRules, joinRules };
+// PATCH /:code
+const statusRules = [codeParam(), status()];
+
+// POST /:code/players. The code comes from the URL; the user comes from the X-Demo-User header.
+const joinRules = [codeParam(), nickname(), avatar()];
+
+module.exports = { codeRules, createRules, statusRules, joinRules };

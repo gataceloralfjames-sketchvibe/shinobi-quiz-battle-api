@@ -1,4 +1,4 @@
-const { matchedData } = require('express-validator');
+ const { matchedData } = require('express-validator');
 const sessionService = require('../services/session.service');
 
 // What a client is allowed to see of a session.
@@ -15,12 +15,10 @@ function sessionToJson(session) {
   };
 }
 
-// What a client is allowed to see of a player.
+// What a client is allowed to see of a player: no user id, school id, name or email.
 function playerToJson(player) {
   return {
     id: player.playerId,
-    sessionId: player.sessionId,
-    userId: player.user_id,
     nickname: player.nickname,
     avatar: player.avatar,
     chakra: player.chakra,
@@ -34,33 +32,37 @@ async function create(req, res) {
 }
 
 async function get(req, res) {
-  const { id } = matchedData(req, { locations: ['params'] });
-  const session = await sessionService.get(id, req.user);
+  const { code } = matchedData(req, { locations: ['params'] });
+  const session = await sessionService.get(code, req.user);
+  res.status(200).json(sessionToJson(session));
+}
+
+async function changeStatus(req, res) {
+  const { code, status } = matchedData(req, { locations: ['params', 'body'] });
+  const session = await sessionService.changeStatus(code, status, req.user);
   res.status(200).json(sessionToJson(session));
 }
 
 async function join(req, res) {
-  const data = matchedData(req, { locations: ['body'] });
-  const player = await sessionService.join(data, req.user);
-  res.status(201).json(playerToJson(player));
+  const { code, nickname, avatar } = matchedData(req, { locations: ['params', 'body'] });
+  const { session, player, created } = await sessionService.join(
+    code,
+    { nickname, avatar },
+    req.user,
+  );
+
+  // 201 Created for a new seat, 200 OK when the account already had one (rejoin).
+  res.status(created ? 201 : 200).json({
+    ...playerToJson(player),
+    rejoined: !created,
+    session: sessionToJson(session),
+  });
 }
 
 async function listPlayers(req, res) {
-  const { id } = matchedData(req, { locations: ['params'] });
-  const players = await sessionService.listPlayers(id, req.user);
+  const { code } = matchedData(req, { locations: ['params'] });
+  const players = await sessionService.listPlayers(code, req.user);
   res.status(200).json(players.map(playerToJson));
 }
 
-async function start(req, res) {
-  const { id } = matchedData(req, { locations: ['params'] });
-  const session = await sessionService.start(id, req.user);
-  res.status(200).json(sessionToJson(session));
-}
-
-async function end(req, res) {
-  const { id } = matchedData(req, { locations: ['params'] });
-  const session = await sessionService.end(id, req.user);
-  res.status(200).json(sessionToJson(session));
-}
-
-module.exports = { create, get, join, listPlayers, start, end };
+module.exports = { create, get, changeStatus, join, listPlayers };
