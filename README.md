@@ -4,7 +4,7 @@ Backend API for **shinobi-quiz-battle**, a tournament game for the SorSU Bulan C
 CS 313 Software Engineering 1, A.Y. 2026-2027.
 
 - Developer: Ralf James Gatacelo (gataceloralfjames-sketchvibe), BSCS 3-1
-- Group and game concept: [Shinobi Quiz Battle]
+ - Group and game concept: Shinobi Quiz Battle
 
 This is my own build of my group's game concept. Every commit in this repository was made by me, with Git, on my own computer or in my own Codespace.
 
@@ -62,16 +62,17 @@ Base URL: `http://localhost:3001/api/v1`
 
 A player is considered to have completed a game when they have answered all the questions in the game session, regardless of whether their answers are correct or incorrect. Players who leave the game or do not answer all the questions are considered incomplete.
 
-## Tables
 
-users
-QuestionSet
-GameSession
-Player
-Question
-Answer
-RewardRound
-RewardObject
+ ## Tables
+
+- users
+- QuestionSet
+- GameSession
+- Player
+- Question
+- Answer
+- RewardRound
+- RewardObject
 
 ## Database scripts
 
