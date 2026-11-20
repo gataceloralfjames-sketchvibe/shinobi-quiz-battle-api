@@ -7,9 +7,13 @@ headers:
 scripts:
   - type: afterResponse
     code: |-
-      pm.test("reopen is refused", function () {
-        pm.response.to.have.status(409);
-        pm.expect(pm.response.json().error.code).to.eql("INVALID_STATUS_CHANGE");
+      pm.test("Status is 200", function () {
+        pm.response.to.have.status(200);
+      });
+
+      pm.test("Returns the game with its join code", function () {
+        const body = pm.response.json();
+        pm.expect(body.joinCode).to.eql(pm.collectionVariables.get("code"));
       });
     language: text/javascript
 order: 2842
