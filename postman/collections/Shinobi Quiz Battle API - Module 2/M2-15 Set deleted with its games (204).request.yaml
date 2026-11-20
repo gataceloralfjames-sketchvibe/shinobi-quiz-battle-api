@@ -4,15 +4,11 @@ method: DELETE
 headers:
   X-Demo-User: "{{host}}"
   Content-Type: application/json
-body:
-  type: json
-  content: '{"status": "active"}'
 scripts:
   - type: afterResponse
     code: |-
-      pm.test("reopen is refused", function () {
-        pm.response.to.have.status(409);
-        pm.expect(pm.response.json().error.code).to.eql("INVALID_STATUS_CHANGE");
+      pm.test("Status is 204", function () {
+        pm.response.to.have.status(204);
       });
     language: text/javascript
 order: 16000
