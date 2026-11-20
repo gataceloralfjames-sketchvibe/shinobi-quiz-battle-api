@@ -1,6 +1,6 @@
 $kind: http-request
-url: "{{baseUrl}}/sessions/{{code}}"
-method: PATCH
+url: "{{baseUrl}}/sessions/{{code}}/players"
+method: POST
 headers:
   X-Demo-User: "{{host}}"
   Content-Type: application/json
@@ -15,4 +15,4 @@ scripts:
         pm.expect(pm.response.json().error.code).to.eql("INVALID_STATUS_CHANGE");
       });
     language: text/javascript
-order: 16000
+order: 4584

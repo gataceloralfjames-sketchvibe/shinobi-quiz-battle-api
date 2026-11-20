@@ -14,4 +14,4 @@ scripts:
         pm.response.to.have.status(403);
       });
     language: text/javascript
-order: 10000
+order: 2898

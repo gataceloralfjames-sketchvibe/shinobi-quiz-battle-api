@@ -11,4 +11,4 @@ scripts:
         pm.expect(pm.response.json().error.code).to.eql("VALIDATION_FAILED");
       });
     language: text/javascript
-order: 12000
+order: 2937

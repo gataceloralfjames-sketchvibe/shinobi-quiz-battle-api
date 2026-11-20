@@ -128,12 +128,31 @@ module.exports = {
       { rewardRoundId: 3, playerId: 3, duration: 5, chakraEarned: 10 },
     ]);
 
-    await queryInterface.bulkInsert('RewardObject', [
+    
+        await queryInterface.bulkInsert('RewardObject', [
       { rewardId: 1, rewardRoundId: 1, objectType: 'chest',   chakraChange: 25 },
       { rewardId: 2, rewardRoundId: 2, objectType: 'balloon', chakraChange: 10 },
       { rewardId: 3, rewardRoundId: 3, objectType: 'bomb',    chakraChange: -10 },
     ]);
+
+    // The rows above were inserted with fixed ids, which does not move the id counters.
+    // Move each counter past its largest id so the API's next INSERT gets a free id.
+    const counters = [
+      ['QuestionSet', 'questionSetId'],
+      ['GameSession', 'sessionId'],
+      ['Player', 'playerId'],
+      ['Question', 'questionId'],
+      ['Answer', 'answerId'],
+      ['RewardRound', 'rewardRoundId'],
+      ['RewardObject', 'rewardId'],
+    ];
+    for (const [table, column] of counters) {
+      await db.query(
+        `SELECT setval(pg_get_serial_sequence('"${table}"', '${column}'), (SELECT MAX("${column}") FROM "${table}"))`,
+      );
+    }
   },
+  
 
   async down(queryInterface) {
     // Delete in reverse order of insertion so foreign keys stay satisfied
