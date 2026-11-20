@@ -3,8 +3,8 @@
 Backend API for **shinobi-quiz-battle**, a tournament game for the SorSU Bulan Campus library.
 CS 313 Software Engineering 1, A.Y. 2026-2027.
 
-- Developer: Ralf James Gatacelo (gataceloralfjames-sketchvibe), BSCS [3-1]
-- Group and game concept: [Group name]
+- Developer: Ralf James Gatacelo (gataceloralfjames-sketchvibe), BSCS 3-1
+- Group and game concept: [Shinobi Quiz Battle]
 
 This is my own build of my group's game concept. Every commit in this repository was made by me, with Git, on my own computer or in my own Codespace.
 
@@ -119,3 +119,24 @@ Rules:
 | Tsunade Senju | `24179333` | host |
 | Hinata Hyuga | `24179723` | player |
 | Naruto Uzumaki | `24179795` | player |
+
+
+## Sessions and Players API (Module 2)
+
+Base URL: `http://localhost:3001/api/v1`
+
+Every request that needs an account sends the `X-Demo-User` header, like Module 1. The join code is six characters, made by the server. A played game is never deleted: it becomes `CLOSED`.
+
+| Method | Path | Who may call it | What it does | Success | Errors |
+|---|---|---|---|---|---|
+| POST | `/sessions` | A host | Starts a game from one of the host's question sets | 201 | 400, 401, 403, 404 |
+| GET | `/sessions/:code` | Anyone | Reads one game by its join code | 200 | 400, 404 |
+| PATCH | `/sessions/:code` | The host of that game | Changes the status (`RUNNING` or `CLOSED`), if the change is allowed | 200 | 400, 401, 403, 404, 409 |
+| POST | `/sessions/:code/players` | Any account | Joins the game, or rejoins it | 201 (new seat), 200 (rejoin) | 400, 401, 404, 409 |
+| GET | `/sessions/:code/players` | Anyone | Lists the nicknames and scores of a game | 200 | 400, 404 |
+
+Rules:
+- A new player can join only while the game is waiting. A returning account is let back in at any time and keeps its seat.
+- Status changes: `waiting` to `RUNNING` or `CLOSED`, `RUNNING` to `CLOSED`. A `CLOSED` game cannot change again (409).
+- A nickname is 2 to 30 characters and must be unique inside one game (409 `NICKNAME_TAKEN`).
+- Deleting a question set also deletes the games and questions that belong to it.
